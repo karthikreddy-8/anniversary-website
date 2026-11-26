@@ -1,0 +1,1650 @@
+:root {
+  --royal-pink: #f7a8b8;
+  --blush-pink: #fff0f3;
+  --rose-pink: #fed7e2;
+  --deep-rose: #d6336c;
+  --gold-primary: #d4af37;
+  --gold-light: #fef08a;
+  --gold-dark: #b8860b;
+  --gold-glow: rgba(212, 175, 55, 0.45);
+  --wine-velvet: #581220;
+  --wine-dark: #3a0d15;
+  --royal-cream: #fffdfa;
+  --text-primary: #2d1319;
+  --text-muted: #6e4c54;
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(212, 175, 55, 0.4);
+  --shadow-soft: 0 12px 35px rgba(183, 110, 121, 0.18);
+  --shadow-royal: 0 25px 65px rgba(88, 18, 32, 0.22), 0 0 30px rgba(212, 175, 55, 0.25);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: radial-gradient(circle at 15% 15%, #fff7f9 0%, #fff0f3 35%, #ffd1dc 75%, #fbb6ce 100%);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Fireworks Overlay Canvas */
+#fireworksCanvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 5000;
+  pointer-events: none;
+  display: none;
+}
+
+/* Background Glowing Lights & Bokeh */
+.background-glow {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.glow-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.6;
+  animation: floatOrb 20s ease-in-out infinite alternate;
+}
+
+.glow-orb-1 {
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(255, 182, 193, 0.75) 0%, rgba(255, 182, 193, 0) 70%);
+  top: -120px;
+  left: -100px;
+}
+
+.glow-orb-2 {
+  width: 580px;
+  height: 580px;
+  background: radial-gradient(circle, rgba(254, 215, 170, 0.65) 0%, rgba(254, 215, 170, 0) 70%);
+  top: 40%;
+  right: -140px;
+  animation-duration: 24s;
+}
+
+.glow-orb-3 {
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, rgba(255, 209, 220, 0.7) 0%, rgba(255, 209, 220, 0) 70%);
+  bottom: -120px;
+  left: 25%;
+  animation-duration: 28s;
+}
+
+@keyframes floatOrb {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(50px, 35px) scale(1.12); }
+  100% { transform: translate(-40px, -25px) scale(0.94); }
+}
+
+/* Floating Hearts & Roses */
+.floating-elements {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.floating-heart {
+  position: absolute;
+  bottom: -40px;
+  color: rgba(214, 51, 108, 0.7);
+  animation: floatUpRose 13s linear infinite;
+  user-select: none;
+}
+
+@keyframes floatUpRose {
+  0% { transform: translateY(0) scale(0.6) rotate(0deg); opacity: 0; }
+  15% { opacity: 0.85; }
+  85% { opacity: 0.85; }
+  100% { transform: translateY(-115vh) scale(1.25) rotate(360deg); opacity: 0; }
+}
+
+/* Music Control Pill */
+.music-toggle {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(14px);
+  border: 1.5px solid var(--gold-primary);
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 6px 25px var(--gold-glow);
+  transition: all 0.35s ease;
+}
+
+.music-toggle:hover {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.55);
+}
+
+.music-icon {
+  font-size: 1.25rem;
+  color: var(--gold-primary);
+  animation: heartPulse 2s infinite;
+}
+
+.music-toggle.playing .music-icon {
+  animation: rotateMusic 3.5s linear infinite;
+}
+
+@keyframes rotateMusic {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes heartPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.music-label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--wine-velvet);
+  letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   3-STAGE PROGRESS BAR (Allows revisiting unlocked stages)
+   ========================================================================== */
+.stage-progress-wrapper {
+  position: sticky;
+  top: 18px;
+  z-index: 990;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: 780px;
+  margin: 18px auto 25px;
+  padding: 10px 20px;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(16px);
+  border: 1.5px solid var(--gold-primary);
+  border-radius: 50px;
+  box-shadow: var(--shadow-soft);
+}
+
+.stage-step-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  border-radius: 30px;
+  cursor: not-allowed;
+  opacity: 0.45;
+  transition: all 0.35s ease;
+  user-select: none;
+}
+
+.stage-step-pill.unlocked {
+  cursor: pointer;
+  opacity: 0.85;
+}
+
+.stage-step-pill.unlocked:hover {
+  opacity: 1;
+  background: rgba(247, 168, 184, 0.25);
+}
+
+.stage-step-pill.active {
+  opacity: 1;
+  background: linear-gradient(135deg, var(--gold-primary), #fef08a);
+  color: var(--wine-velvet);
+  box-shadow: 0 4px 15px var(--gold-glow);
+  font-weight: 700;
+}
+
+.step-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--wine-velvet);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.stage-step-pill.active .step-num {
+  background: var(--wine-velvet);
+  color: var(--gold-light);
+}
+
+.step-text {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.stage-divider-line {
+  width: 25px;
+  height: 2px;
+  background: rgba(212, 175, 55, 0.3);
+  transition: background 0.35s ease;
+}
+
+.stage-divider-line.active {
+  background: var(--gold-primary);
+}
+
+/* Main Container Transition */
+.stage-main-container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 10px 20px 80px;
+}
+
+.fade-in {
+  animation: stageFadeIn 0.75s ease-out;
+}
+
+@keyframes stageFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.stage-badge-tag {
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.82rem;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--gold-primary);
+  padding: 5px 20px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+/* ==========================================================================
+   STAGE 1: THE MYSTERY GIFT 🎁
+   ========================================================================== */
+.stage-1-view {
+  text-align: center;
+  padding: 40px 20px 60px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.royal-crest {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.crest-flower {
+  font-size: 1.6rem;
+  animation: heartPulse 2.5s infinite;
+}
+
+.crest-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  letter-spacing: 3px;
+  color: var(--gold-dark);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.welcome-headline {
+  font-family: 'Alex Brush', cursive;
+  font-size: 4.6rem;
+  color: var(--wine-velvet);
+  line-height: 1.1;
+  margin: 6px 0 10px;
+  text-shadow: 1px 2px 4px rgba(88, 18, 32, 0.15);
+}
+
+.welcome-tagline {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.4rem;
+  color: var(--deep-rose);
+  margin-bottom: 30px;
+}
+
+.mystery-gift-wrapper {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  margin: 20px auto 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.roses-surround {
+  position: absolute;
+  font-size: 1.6rem;
+  letter-spacing: 4px;
+}
+
+.roses-surround.top-left { top: -10px; left: -20px; }
+.roses-surround.top-right { top: -10px; right: -20px; }
+.roses-surround.bottom-left { bottom: -10px; left: -20px; }
+.roses-surround.bottom-right { bottom: -10px; right: -20px; }
+
+/* 3D Animated Gift Box */
+.gift-box {
+  width: 170px;
+  height: 170px;
+  position: relative;
+  transition: transform 0.6s ease;
+  filter: drop-shadow(0 15px 35px rgba(88, 18, 32, 0.28));
+}
+
+.gift-box.opened .gift-lid {
+  transform: translateY(-75px) rotate(-18deg);
+  opacity: 0.75;
+}
+
+.gift-lid {
+  width: 182px;
+  height: 42px;
+  background: linear-gradient(135deg, #d4af37, #fef08a, #d4af37);
+  border-radius: 12px;
+  position: absolute;
+  top: 0;
+  left: -6px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 5;
+}
+
+.gift-bow {
+  font-size: 2.6rem;
+  margin-top: -38px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.25));
+}
+
+.gift-body {
+  width: 170px;
+  height: 135px;
+  background: linear-gradient(135deg, #e63946, #c2185b, #880e4f);
+  border-radius: 16px;
+  position: absolute;
+  bottom: 0;
+  box-shadow: 0 14px 35px rgba(136, 14, 79, 0.4);
+  overflow: hidden;
+}
+
+.gift-ribbon-vertical {
+  width: 28px;
+  height: 100%;
+  background: linear-gradient(to right, #d4af37, #fef08a, #d4af37);
+  position: absolute;
+  left: 71px;
+}
+
+.gift-ribbon-horizontal {
+  width: 100%;
+  height: 28px;
+  background: linear-gradient(to bottom, #d4af37, #fef08a, #d4af37);
+  position: absolute;
+  top: 53px;
+}
+
+.unwrap-revealed-card {
+  background: radial-gradient(circle at center, #ffffff 0%, #fff0f3 100%);
+  border: 2.5px solid var(--gold-primary);
+  border-radius: 32px;
+  padding: 42px 32px;
+  box-shadow: var(--shadow-royal);
+  animation: giftReveal 0.85s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  margin-top: 30px;
+}
+
+@keyframes giftReveal {
+  from { opacity: 0; transform: scale(0.85) translateY(25px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.revealed-sparkles {
+  font-size: 2.2rem;
+  margin-bottom: 12px;
+}
+
+.welcome-message-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.55rem;
+  line-height: 1.85;
+  color: var(--wine-velvet);
+  font-style: italic;
+  font-weight: 600;
+  max-width: 620px;
+  margin: 0 auto 20px;
+}
+
+.next-prompt-line {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+  color: var(--gold-dark);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.grand-gold-btn {
+  background: linear-gradient(135deg, #d4af37 0%, #f6c855 50%, #e63946 100%);
+  color: #ffffff;
+  border: none;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  padding: 16px 38px;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 12px 35px rgba(212, 175, 55, 0.5);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.grand-gold-btn:hover {
+  transform: translateY(-4px) scale(1.04);
+  box-shadow: 0 16px 45px rgba(230, 57, 70, 0.6);
+}
+
+.pulse-glow {
+  animation: pulseButton 2s infinite;
+}
+
+@keyframes pulseButton {
+  0%, 100% { box-shadow: 0 10px 30px rgba(212, 175, 55, 0.45); }
+  50% { box-shadow: 0 14px 45px rgba(230, 57, 70, 0.65), 0 0 25px var(--gold-glow); }
+}
+
+/* ==========================================================================
+   STAGE 2: THE MEMORY ADVENTURE 📸
+   ========================================================================== */
+.stage-2-view {
+  padding: 20px 10px;
+}
+
+.section-head {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.section-badge {
+  font-family: 'Cinzel', serif;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--gold-dark);
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.6rem;
+  color: var(--wine-velvet);
+  margin-bottom: 10px;
+}
+
+.section-title::after {
+  content: '🌹 ❦ 🌸';
+  display: block;
+  font-size: 1rem;
+  letter-spacing: 8px;
+  color: var(--deep-rose);
+  margin-top: 8px;
+}
+
+.section-desc {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  max-width: 620px;
+  margin: 10px auto 0;
+  line-height: 1.6;
+}
+
+/* 3 Memory Boxes Grid */
+.memory-boxes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+  margin-bottom: 30px;
+}
+
+.memory-box-card {
+  background: var(--glass-bg);
+  border: 2px solid var(--gold-primary);
+  border-radius: 28px;
+  padding: 35px 24px;
+  text-align: center;
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+  position: relative;
+}
+
+.memory-box-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: var(--gold-light);
+  box-shadow: var(--shadow-royal);
+}
+
+.memory-box-card.opened {
+  background: radial-gradient(circle at center, #ffffff 0%, #ffe8ed 100%);
+  border-color: var(--deep-rose);
+  box-shadow: 0 15px 40px rgba(214, 51, 108, 0.3);
+}
+
+.box-icon {
+  font-size: 2.8rem;
+  margin-bottom: 12px;
+  animation: heartPulse 2.4s infinite;
+}
+
+.box-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.45rem;
+  color: var(--wine-velvet);
+  margin-bottom: 8px;
+}
+
+.box-desc {
+  font-size: 0.92rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.box-action-hint {
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  color: var(--gold-dark);
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid var(--gold-primary);
+  padding: 6px 16px;
+  border-radius: 20px;
+  display: inline-block;
+}
+
+/* Memory Box Drawer */
+.memory-box-drawer {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(20px);
+  border: 2.5px solid var(--gold-primary);
+  border-radius: 32px;
+  padding: 35px 28px;
+  box-shadow: var(--shadow-royal);
+  margin-bottom: 50px;
+  animation: drawerSlide 0.6s ease-out;
+}
+
+@keyframes drawerSlide {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.drawer-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.drawer-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.8rem;
+  color: var(--wine-velvet);
+  margin-bottom: 4px;
+}
+
+.drawer-subtitle {
+  font-size: 0.95rem;
+  color: var(--deep-rose);
+  font-style: italic;
+}
+
+.drawer-photos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+}
+
+.drawer-photo-card {
+  border-radius: 22px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 3px solid #ffffff;
+  box-shadow: 0 8px 25px rgba(88, 18, 32, 0.14);
+  cursor: pointer;
+  height: 380px;
+  position: relative;
+  transition: all 0.4s ease;
+}
+
+.drawer-photo-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  border-color: var(--gold-primary);
+  box-shadow: var(--shadow-royal);
+}
+
+.drawer-img-frame {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.drawer-img-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
+  transition: transform 0.6s ease;
+}
+
+.drawer-photo-card:hover .drawer-img-frame img {
+  transform: scale(1.08);
+}
+
+.photo-card-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+right: 0;
+  background: linear-gradient(to top, rgba(28, 7, 13, 0.95) 0%, rgba(28, 7, 13, 0.5) 60%, transparent 100%);
+  color: #ffffff;
+  padding: 35px 20px 18px;
+}
+
+.photo-card-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  color: #ffffff;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.photo-card-desc {
+  font-size: 0.86rem;
+  color: #fed7e2;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.photo-zoom-icon {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(45, 19, 25, 0.7);
+  color: #ffffff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--gold-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+
+/* ==========================================================================
+   PART B: PHOTO PUZZLE GAME
+   ========================================================================== */
+.puzzle-game-wrapper {
+  background: var(--glass-bg);
+  border: 2px solid var(--gold-primary);
+  border-radius: 32px;
+  padding: 35px 24px;
+  box-shadow: var(--shadow-royal);
+  max-width: 580px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.puzzle-controls-top {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.small-pill-btn {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1.5px solid var(--gold-primary);
+  color: var(--wine-velvet);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.small-pill-btn:hover {
+  background: var(--gold-primary);
+  color: #fff;
+}
+
+.puzzle-board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 6px;
+  width: 340px;
+  height: 340px;
+  margin: 0 auto;
+  border: 4px solid var(--gold-primary);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  background: #14050a;
+}
+
+.puzzle-tile {
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  transition: transform 0.25s ease, border-color 0.25s ease;
+  user-select: none;
+}
+
+.puzzle-tile:hover {
+  transform: scale(0.96);
+  border-color: #ffd700;
+}
+
+.puzzle-tile.selected {
+  outline: 3px solid #e63946;
+  border-color: #fff;
+  transform: scale(0.92);
+  box-shadow: 0 0 15px rgba(230, 57, 70, 0.8);
+}
+
+.puzzle-success-banner {
+  margin-top: 25px;
+  background: #ffffff;
+  border: 2px solid var(--gold-primary);
+  border-radius: 22px;
+  padding: 24px 20px;
+  box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
+  display: none;
+  animation: bannerFade 0.6s ease;
+}
+
+.puzzle-success-banner.solved {
+  display: block;
+}
+
+@keyframes bannerFade {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.puzzle-sparkle-stars {
+  font-size: 1.8rem;
+  margin-bottom: 6px;
+}
+
+.puzzle-success-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  color: var(--wine-velvet);
+  margin-bottom: 6px;
+}
+
+.puzzle-success-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.25rem;
+  color: #3b141e;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* ==========================================================================
+   PART C: SECRET LOVE MESSAGE ENVELOPE
+   ========================================================================== */
+.secret-envelope-wrapper {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.envelope-card-sealed {
+  background: linear-gradient(135deg, #ffffff 0%, #fff0f3 100%);
+  border: 2px solid var(--gold-primary);
+  border-radius: 30px;
+  padding: 55px 30px;
+  text-align: center;
+  box-shadow: var(--shadow-royal);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.envelope-card-sealed:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 25px 60px rgba(88, 18, 32, 0.28);
+}
+
+.wax-seal-badge {
+  width: 85px;
+  height: 85px;
+  background: radial-gradient(circle at 35% 35%, #e63946 0%, #9e1b2f 70%, #600f1c 100%);
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 2rem;
+  box-shadow: 0 8px 25px rgba(158, 27, 47, 0.45);
+  border: 2.5px solid rgba(255, 215, 0, 0.6);
+  animation: heartPulse 2.2s infinite;
+}
+
+.envelope-prompt-text {
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  letter-spacing: 1.5px;
+  color: var(--wine-velvet);
+  margin-bottom: 8px;
+}
+
+.envelope-sub-hint {
+  font-size: 0.95rem;
+  color: var(--deep-rose);
+  font-weight: 600;
+}
+
+.royal-letter-paper {
+  background: #fffdfa url('data:image/svg+xml;utf8,<svg width="100" height="24" xmlns="http://www.w3.org/2000/svg"><line x1="0" y1="23" x2="100" y2="23" stroke="%23f7d1dc" stroke-width="1"/></svg>');
+  background-size: 100% 36px;
+  border: 2px solid var(--gold-primary);
+  border-radius: 28px;
+  padding: 55px 45px;
+  box-shadow: var(--shadow-royal);
+  animation: paperSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes paperSlideUp {
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.letter-floral-header {
+  text-align: center;
+  font-size: 1.5rem;
+  color: var(--deep-rose);
+  margin-bottom: 24px;
+}
+
+.letter-script-body {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.45rem;
+  line-height: 2.1;
+  color: #3b141e;
+  margin-bottom: 20px;
+}
+
+/* ==========================================================================
+   STAGE 3: THE GRAND CELEBRATION 👑
+   ========================================================================== */
+.stage-3-view {
+  padding: 20px 10px;
+}
+
+.grand-entrance-wrapper {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.curtains-banner {
+  margin-bottom: 25px;
+}
+
+.floral-garland {
+  font-size: 1.4rem;
+  color: var(--deep-rose);
+  letter-spacing: 6px;
+  margin-bottom: 10px;
+}
+
+.hero-anniv-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.hero-names {
+  font-family: 'Alex Brush', cursive;
+  font-size: 5.4rem;
+  color: var(--wine-velvet);
+  line-height: 1.1;
+  margin-bottom: 12px;
+  text-shadow: 2px 3px 6px rgba(88, 18, 32, 0.15);
+}
+
+.wedding-date-highlight {
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--wine-velvet);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(254, 240, 138, 0.5));
+  border: 1.5px solid var(--gold-primary);
+  padding: 6px 24px;
+  border-radius: 30px;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+}
+
+.days-together-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--deep-rose);
+  background: rgba(255, 255, 255, 0.92);
+  border: 1.5px solid var(--gold-primary);
+  padding: 6px 22px;
+  border-radius: 25px;
+  box-shadow: 0 4px 15px rgba(214, 51, 108, 0.2);
+  animation: pulseButton 2.4s infinite;
+}
+
+.days-star {
+  font-size: 1.1rem;
+  color: var(--gold-primary);
+}
+
+.grand-entrance-portrait-frame {
+  position: relative;
+  max-width: 460px;
+  margin: 25px auto;
+  border-radius: 28px;
+  overflow: hidden;
+  border: 5px solid #ffffff;
+  box-shadow: 0 20px 55px rgba(88, 18, 32, 0.3), 0 0 35px var(--gold-glow);
+}
+
+.golden-curtain {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.4), rgba(254, 240, 138, 0.2));
+  backdrop-filter: blur(2px);
+  z-index: 4;
+  transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
+  pointer-events: none;
+}
+
+.golden-curtain.left { left: 0; animation: curtainOpenLeft 1.4s 0.3s forwards; }
+.golden-curtain.right { right: 0; animation: curtainOpenRight 1.4s 0.3s forwards; }
+
+@keyframes curtainOpenLeft {
+  to { transform: translateX(-100%); }
+}
+
+@keyframes curtainOpenRight {
+  to { transform: translateX(100%); }
+}
+
+.grand-portrait-img {
+  width: 100%;
+  height: auto;
+  max-height: 580px;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+.grand-portrait-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+right: 0;
+  background: linear-gradient(to top, rgba(28, 7, 13, 0.92) 0%, transparent 100%);
+  color: #ffffff;
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  padding: 30px 20px 14px;
+  z-index: 5;
+}
+
+.celebrate-fireworks-btn {
+  background: linear-gradient(135deg, #ff4081 0%, #e91e63 50%, #9c27b0 100%);
+  color: #ffffff;
+  border: 2px solid var(--gold-light);
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  padding: 18px 46px;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 14px 40px rgba(233, 30, 99, 0.5), 0 0 25px rgba(254, 240, 138, 0.4);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.35s ease;
+  animation: celebratePulse 2.2s infinite;
+}
+
+@keyframes celebratePulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 12px 35px rgba(233, 30, 99, 0.45); }
+  50% { transform: scale(1.05); box-shadow: 0 16px 50px rgba(233, 30, 99, 0.7), 0 0 35px var(--gold-glow); }
+}
+
+.celebrate-fireworks-btn:hover {
+  transform: translateY(-4px) scale(1.06);
+}
+
+/* Final Anniversary Screen & Greeting Banner */
+.final-anniversary-screen {
+  text-align: center;
+  padding: 40px 20px 60px;
+  max-width: 880px;
+  margin: 30px auto 0;
+}
+
+.final-floral-wreath {
+  background: radial-gradient(circle at center, #ffffff 0%, #fff0f3 100%);
+  border: 3px double var(--gold-primary);
+  border-radius: 40px;
+  padding: 55px 36px;
+  box-shadow: var(--shadow-royal);
+  position: relative;
+}
+
+.final-roses-top {
+  font-size: 2rem;
+  color: var(--deep-rose);
+  letter-spacing: 8px;
+  margin-bottom: 16px;
+}
+
+.grand-final-banner {
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.95) 0%, rgba(254, 215, 226, 0.85) 60%, rgba(251, 182, 206, 0.7) 100%);
+  border: 3px solid var(--gold-primary);
+  border-radius: 32px;
+  padding: 45px 30px;
+  margin: 20px auto 25px;
+  box-shadow: 0 25px 60px rgba(88, 18, 32, 0.22), 0 0 45px var(--gold-glow);
+}
+
+.grand-gold-crown {
+  font-size: 2.4rem;
+  color: var(--gold-primary);
+  margin-bottom: 8px;
+  animation: heartPulse 2.4s infinite;
+}
+
+.grand-anniversary-headline {
+  font-family: 'Cinzel', serif;
+  font-size: 2.7rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  line-height: 1.25;
+  background: linear-gradient(135deg, #b8860b 0%, #d4af37 25%, #fef08a 50%, #d4af37 75%, #880e4f 100%);
+  -webkit-background-clip: text;
+background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 3px 6px rgba(88, 18, 32, 0.25));
+  margin: 8px 0 10px;
+  text-transform: uppercase;
+}
+
+.grand-wedding-date-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--wine-velvet);
+  margin-bottom: 14px;
+}
+
+.gold-line-decor {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.gold-line {
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--gold-primary), transparent);
+}
+
+.gold-diamond {
+  color: var(--gold-primary);
+  font-size: 1.1rem;
+}
+
+.grand-anniversary-blessing {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.55rem;
+  line-height: 1.85;
+  color: #3b141e;
+  font-style: italic;
+  font-weight: 600;
+  max-width: 680px;
+  margin: 0 auto 20px;
+}
+
+.grand-glowing-heart {
+  font-size: 4.8rem;
+  color: #e63946;
+  display: inline-block;
+  margin: 10px auto 0;
+  animation: grandHeartGlow 1.4s ease-in-out infinite;
+  filter: drop-shadow(0 10px 25px rgba(230, 57, 70, 0.5));
+}
+
+@keyframes grandHeartGlow {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 8px 20px rgba(230, 57, 70, 0.45)); }
+  14% { transform: scale(1.22) rotate(-3deg); filter: drop-shadow(0 12px 30px rgba(230, 57, 70, 0.7)); }
+  28% { transform: scale(1) rotate(0deg); }
+  42% { transform: scale(1.16) rotate(3deg); filter: drop-shadow(0 10px 25px rgba(230, 57, 70, 0.6)); }
+  70% { transform: scale(1); }
+}
+
+.final-crafted-tag {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ==========================================================================
+   PART D: ONE LAST SURPRISE MODAL
+   ========================================================================== */
+.last-surprise-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 5, 10, 0.94);
+  backdrop-filter: blur(16px);
+  z-index: 5500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.last-surprise-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.last-surprise-card {
+  background: radial-gradient(circle at center, #ffffff 0%, #fff0f3 100%);
+  border: 3px solid var(--gold-primary);
+  border-radius: 36px;
+  padding: 45px 30px;
+  max-width: 580px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 50px var(--gold-glow);
+  position: relative;
+  transform: scale(0.9);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.last-surprise-modal.active .last-surprise-card {
+  transform: scale(1);
+}
+
+.modal-close-icon {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: rgba(247, 168, 184, 0.2);
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  color: var(--wine-velvet);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s;
+}
+
+.modal-close-icon:hover {
+  background: var(--wine-velvet);
+  color: #fff;
+}
+
+.modal-heart-beat {
+  font-size: 3.5rem;
+  color: #e63946;
+  margin-bottom: 12px;
+  animation: heartPulse 1.4s infinite;
+}
+
+.modal-photo-frame {
+  max-width: 380px;
+  max-height: 380px;
+  margin: 0 auto 20px;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 4px solid var(--gold-primary);
+  box-shadow: 0 15px 35px rgba(88, 18, 32, 0.25);
+}
+
+.modal-photo-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.last-surprise-headline {
+  font-family: 'Cinzel', serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--wine-velvet);
+  margin-bottom: 8px;
+}
+
+.last-surprise-sub {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.35rem;
+  font-style: italic;
+  color: var(--deep-rose);
+  margin-bottom: 14px;
+}
+
+/* ==========================================================================
+   TIMELINE SECTION & FOOTER (Preserved)
+   ========================================================================== */
+.royal-timeline-container {
+  position: relative;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.royal-timeline-stem {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 3px;
+  background: linear-gradient(to bottom, rgba(212, 175, 55, 0.2), var(--gold-primary) 30%, var(--gold-primary) 70%, rgba(212, 175, 55, 0.2));
+  border-radius: 2px;
+}
+
+.timeline-row {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 50px;
+  position: relative;
+  margin-bottom: 50px;
+  width: 50%;
+}
+
+.timeline-row:nth-child(even) {
+  align-self: flex-end;
+  margin-left: auto;
+  justify-content: flex-start;
+  padding-right: 0;
+  padding-left: 50px;
+}
+
+.timeline-node {
+  position: absolute;
+  top: 25px;
+  right: -18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid var(--gold-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  box-shadow: 0 0 15px var(--gold-glow);
+  z-index: 5;
+}
+
+.timeline-row:nth-child(even) .timeline-node {
+  right: auto;
+  left: -18px;
+}
+
+.timeline-card-content {
+  background: var(--glass-bg);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  width: 100%;
+  transition: all 0.35s ease;
+}
+
+.timeline-card-content:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-royal);
+  border-color: var(--gold-primary);
+}
+
+.timeline-photo-thumbnail {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  background: #2a1017;
+}
+
+.timeline-photo-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 25%;
+  transition: transform 0.6s ease;
+}
+
+.timeline-text-body {
+  padding: 22px 24px;
+}
+
+.timeline-date-tag {
+  display: inline-block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--wine-velvet);
+  background: rgba(247, 168, 184, 0.35);
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+}
+
+.timeline-milestone-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.35rem;
+  color: var(--wine-velvet);
+  margin-bottom: 6px;
+}
+
+.timeline-milestone-desc {
+  font-size: 0.93rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.royal-footer {
+  text-align: center;
+  padding: 50px 20px 40px;
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
+  margin-top: 60px;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.footer-names {
+  font-family: 'Alex Brush', cursive;
+  font-size: 3.2rem;
+  color: var(--wine-velvet);
+  margin-bottom: 6px;
+}
+
+.footer-date {
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--gold-dark);
+}
+
+/* ==========================================================================
+   FULLSCREEN LIGHTBOX MODAL
+   ========================================================================== */
+.lightbox-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 5, 10, 0.92);
+  backdrop-filter: blur(14px);
+  z-index: 4500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.lightbox-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.lightbox-container {
+  position: relative;
+  max-width: 980px;
+  width: 100%;
+  background: #ffffff;
+  border: 3px solid var(--gold-primary);
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 35px 90px rgba(0, 0, 0, 0.65), 0 0 45px var(--gold-glow);
+  transform: scale(0.92);
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.lightbox-modal.active .lightbox-container {
+  transform: scale(1);
+}
+
+.lightbox-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  border: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 1.4rem;
+  color: var(--wine-velvet);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.25s;
+}
+
+.lightbox-close-btn:hover {
+  background: #e63946;
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+.lightbox-img-wrapper {
+  position: relative;
+  width: 100%;
+  max-height: 70vh;
+  background: #14050a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.lightbox-img {
+  max-width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  transition: transform 0.4s ease;
+}
+
+.lightbox-nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.88);
+  border: 1.5px solid var(--gold-primary);
+  color: var(--wine-velvet);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s;
+  z-index: 15;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.lightbox-nav-arrow:hover {
+  background: #ffffff;
+  color: #e63946;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.lightbox-nav-arrow.prev { left: 18px; }
+.lightbox-nav-arrow.next { right: 18px; }
+
+.lightbox-caption-area {
+  padding: 22px 30px;
+  background: radial-gradient(circle at center, #ffffff 0%, #fff0f3 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.lightbox-category {
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem;
+  color: var(--gold-dark);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.lightbox-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.45rem;
+  color: var(--wine-velvet);
+}
+
+.lightbox-desc {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 4px;
+}
+
+.lightbox-counter {
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--gold-dark);
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid var(--gold-primary);
+  padding: 5px 16px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+@media (max-width: 768px) {
+  .stage-progress-wrapper {
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 20px;
+  }
+  .stage-step-pill {
+    padding: 5px 10px;
+  }
+  .step-text {
+    font-size: 0.75rem;
+  }
+  .stage-divider-line {
+    display: none;
+  }
+  .welcome-headline {
+    font-size: 3rem;
+  }
+  .hero-names {
+    font-size: 3.6rem;
+  }
+  .puzzle-board {
+    width: 280px;
+    height: 280px;
+  }
+  .grand-anniversary-headline {
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+  }
+  .grand-wedding-date-tag {
+    font-size: 1.25rem;
+  }
+  .grand-anniversary-blessing {
+    font-size: 1.25rem;
+    line-height: 1.7;
+  }
+  .grand-glowing-heart {
+    font-size: 3.6rem;
+  }
+  .grand-final-banner {
+    padding: 30px 16px;
+  }
+}
